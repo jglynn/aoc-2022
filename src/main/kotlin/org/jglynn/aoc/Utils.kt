@@ -12,7 +12,7 @@ internal object Utils {
         File(fileName.toURI()).readLines()
 
     fun loadAsListOfInt(name: String): List<Int> {
-        return resourceAsListOfString(name).map { it.toInt() }
+        return resourceAsListOfString(name).map { it.toIntOrNull() ?: -1}
     }
 
     fun loadAsListOfStringIntPair(name: String): List<Pair<String,Int>> {
