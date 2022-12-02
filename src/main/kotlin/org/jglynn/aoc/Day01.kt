@@ -7,9 +7,14 @@ class Day01(private val input: List<Int>) {
         return splitList.maxOf { it.reduce { acc, i -> acc + i } }
     }
 
-    fun solvePart2(): Int =
-        input.size
-
+    fun solvePart2(): Int {
+        val splitList = input.split { it < 0 }
+        val top3 = splitList
+            .map{ it.reduce { acc, i -> acc + i } }
+            .sortedDescending()
+            .take(3)
+        return top3.sum()
+    }
 
     fun <T> List<T>.split(predicate: (T) -> Boolean): List<List<T>> =
         fold(mutableListOf(mutableListOf<T>())) { acc, t ->

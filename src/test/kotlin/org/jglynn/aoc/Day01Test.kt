@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test
 class Day01Test {
 
     // Arrange
-    private val testPart1 = loadAsListOfInt("Day01_test.txt")
-    private val realPart1 = loadAsListOfInt("Day01_real.txt")
+    private val testData = loadAsListOfInt("Day01_test.txt")
+    private val realData = loadAsListOfInt("Day01_real.txt")
 
     @Nested
     @DisplayName("Part 1")
@@ -20,7 +20,7 @@ class Day01Test {
         @Test
         fun `Matches example`() {
 
-            val answer = Day01(testPart1).solvePart1()
+            val answer = Day01(testData).solvePart1()
 
             // Assert
             assertThat(answer).isEqualTo(24000)
@@ -29,11 +29,34 @@ class Day01Test {
         @Test
         fun `Actual answer`() {
 
-            val answer = Day01(realPart1).solvePart1()
+            val answer = Day01(realData).solvePart1()
 
             // Assert
             assertThat(answer).isEqualTo(69883)
         }
     }
+
+    @Nested
+    @DisplayName("Part 2")
+    inner class Part2 {
+        @Test
+        fun `Matches example`() {
+
+            val answer = Day01(testData).solvePart2()
+
+            // Assert
+            assertThat(answer).isEqualTo(45000)
+        }
+
+        @Test
+        fun `Actual answer`() {
+
+            val answer = Day01(realData).solvePart2()
+
+            // Assert
+            assertThat(answer).isEqualTo(207576)
+        }
+    }
+
 
 }
