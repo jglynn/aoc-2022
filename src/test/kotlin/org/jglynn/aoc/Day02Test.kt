@@ -14,14 +14,13 @@ class Day02Test {
     private val realData = Utils.loadAsListOfPairs("Day02_real.txt")
 
     @Nested
-    @DisplayName("Part 2")
-    inner class Part2 {
+    @DisplayName("Part 1")
+    inner class Part1 {
         @Test
         fun `Matches example`() {
 
             val answer = Day02(testData).solvePart1()
 
-            // Assert
             assertThat(answer).isEqualTo(15)
         }
 
@@ -30,11 +29,29 @@ class Day02Test {
 
             val answer = Day02(realData).solvePart1()
 
-            // Assert
             assertThat(answer).isEqualTo(13268)
         }
     }
 
+    @Nested
+    @DisplayName("Part 2")
+    inner class Part2 {
+        @Test
+        fun `Matches example`() {
+
+            val answer = Day02(testData).solvePart2()
+
+            assertThat(answer).isEqualTo(12)
+        }
+
+        @Test
+        fun `Actual answer`() {
+
+            val answer = Day02(realData).solvePart2()
+
+            assertThat(answer).isEqualTo(15508)
+        }
+    }
 
 
 }

@@ -3,41 +3,65 @@ package org.jglynn.aoc
 class Day02(private val input: List<Pair<String,String>>) {
 
     fun solvePart1() : Int {
-        return input.sumOf { score(it.first, it.second) }
+        return input.sumOf { score(handFrom(it.first), handFrom(it.second)) }
     }
 
-    private fun score(first : String, second : String) : Int {
-        val h1 = Hand1.valueOf(first)
-        val h2 = Hand2.valueOf(second)
-        return calc ( h1, h2)
+    fun solvePart2(): Int {
+        return input.sumOf { score(handFrom(it.first), Result.valueOf(it.second)) }
     }
 
-    private fun calc(h1: Day02.Hand1, h2: Day02.Hand2): Int {
-        if (    h1 == Hand1.A && h2 == Hand2.Y ||
-                h1 == Hand1.B && h2 == Hand2.Z ||
-                h1 == Hand1.C && h2 == Hand2.X ) {
-            return 6 + h2.value;
+    private fun score(hand1 : Hand, hand2 : Hand) : Int {
+        if ( hand2.beats(hand1) ) return 6 + hand2.score()
+        if ( hand2.ties(hand1) ) return 3 + hand2.score()
+        return hand2.score()
+    }
+
+    private fun score(hand : Hand, result : Result) : Int =
+        when (result) {
+            Result.X -> 0 + hand.beats().score()
+            Result.Y -> 3 + hand.score()
+            Result.Z -> 6 + hand.losesTo().score()
         }
-        if (    h1 == Hand1.A && h2 == Hand2.X ||
-                h1 == Hand1.B && h2 == Hand2.Y ||
-                h1 == Hand1.C && h2 == Hand2.Z ) {
-            return 3 + h2.value;
+
+    enum class Result(val value: Int) {
+        X(0),  // LOSE
+        Y(3),  // DRAW
+        Z(6)   // WIN
+    }
+
+    private fun handFrom(value: String): Hand {
+        return when (value) {
+            "A", "X" -> Rock()
+            "B", "Y" -> Paper()
+            "C", "Z" -> Scissors()
+            else -> throw IllegalArgumentException("value $value is not a valid Hand")
         }
-        return 0 + h2.value;
     }
 
-    fun solvePart2(): Int =
-        input.size
-
-    enum class Hand1(val value: Int) {
-        A(1),  // ROCK
-        B(2),  // PAPER
-        C(3)   // SCISSORS
+    abstract class Hand {
+        abstract fun score(): Int
+        abstract fun losesTo(): Hand
+        abstract fun beats(): Hand
+        fun beats(hand: Hand): Boolean = this.beats() == hand
+        fun ties(hand: Hand): Boolean = this == hand
     }
 
-    enum class Hand2(val value: Int) {
-        X(1),  // ROCK
-        Y(2),  // PAPER
-        Z(3)   // SCISSORS
+    data class Rock(private var score: Int = 1): Hand() {
+        override fun score() = score
+        override fun losesTo() = Paper()
+        override fun beats() = Scissors()
     }
+
+    data class Paper(private var score: Int = 2): Hand() {
+        override fun score() = score
+        override fun losesTo() = Scissors()
+        override fun beats() = Rock()
+    }
+
+    data class Scissors(private var score: Int = 3): Hand() {
+        override fun score() = score
+        override fun losesTo() = Rock()
+        override fun beats() = Paper()
+    }
+
 }
