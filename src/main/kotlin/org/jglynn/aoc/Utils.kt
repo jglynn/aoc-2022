@@ -31,6 +31,6 @@ internal object Utils {
         }
     }
 
-    private fun String.toURI(): URI =
+    fun String.toURI(): URI =
         Utils.javaClass.classLoader.getResource(this)?.toURI() ?: throw IllegalArgumentException("Cannot find Resource: $this")
  }
