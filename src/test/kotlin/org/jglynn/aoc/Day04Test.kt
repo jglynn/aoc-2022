@@ -40,7 +40,7 @@ class Day04Test {
 
             val answer = Day04(testData).solvePart2()
 
-            assertThat(answer).isEqualTo(0)
+            assertThat(answer).isEqualTo(4)
         }
 
         @Test
@@ -48,7 +48,7 @@ class Day04Test {
 
             val answer = Day04(realData).solvePart2()
 
-            assertThat(answer).isEqualTo(0)
+            assertThat(answer).isEqualTo(806)
         }
     }
 
