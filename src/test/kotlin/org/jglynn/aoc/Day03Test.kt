@@ -32,5 +32,26 @@ class Day03Test {
         }
     }
 
+    @Nested
+    @DisplayName("Part 2")
+    inner class Part2 {
+        @Test
+        fun `Matches example`() {
+
+            val answer = Day03(testData).solvePart2()
+
+            assertThat(answer).isEqualTo(70)
+        }
+
+        @Test
+        fun `Actual answer`() {
+
+            val answer = Day03(realData).solvePart2()
+
+            assertThat(answer).isEqualTo(2790)
+        }
+    }
+
+
 
 }
