@@ -21,8 +21,6 @@ class Day04(private val input: String) {
                 (second subtract first).isEmpty()
 
     private fun String.rangeOf(): IntRange =
-        substringBefore('-').toInt().rangeTo(
-            substringAfter('-').toInt()
-        )
+        substringBefore('-').toInt() ..substringAfter('-').toInt()
 
 }
