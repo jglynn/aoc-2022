@@ -1,17 +1,16 @@
 package org.jglynn.aoc
 
 
-class Day04(private val input: String) {
+class Day04(input: String) {
+
+    private val ranges: List<Pair<IntRange,IntRange>> =
+        Utils.resourceAsListOfString(input).map { it.toRangePair() }
 
     fun solvePart1() : Int =
-        Utils.resourceAsListOfString(input)
-            .map { it.toRangePair() }
-            .count { it.isCovered() }
+        ranges.count { it.isCovered() }
 
     fun solvePart2(): Int =
-        Utils.resourceAsListOfString(input)
-            .map { it.toRangePair() }
-            .count { (it.first intersect it.second ).isNotEmpty() }
+        ranges.count { (it.first intersect it.second ).isNotEmpty() }
 
     private fun String.toRangePair(): Pair<IntRange, IntRange> =
         substringBefore(',').rangeOf() to substringAfter(',').rangeOf()
