@@ -11,14 +11,10 @@ internal object Utils {
     fun resourceAsListOfString(fileName: String): List<String> =
         File(fileName.toURI()).readLines()
 
-    fun loadAsListOfPairs(name: String): List<Pair<String,String>> {
-        return resourceAsListOfString(name).map {
-            Pair(
-                it.substringBefore(' ').trim(),
-                it.substringAfter(' ').trim()
-            )
+    fun loadAsListOfPairs(name: String): List<Pair<String,String>> =
+        resourceAsListOfString(name).map {
+            it.substringBefore(' ').trim() to it.substringAfter(' ').trim()
         }
-    }
 
     fun loadAsListOfInt(name: String): List<Int> {
         return resourceAsListOfString(name).map { it.toIntOrNull() ?: -1}
