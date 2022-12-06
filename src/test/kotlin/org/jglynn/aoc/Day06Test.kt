@@ -44,4 +44,35 @@ class Day06Test {
         }
     }
 
+    @Nested
+    @DisplayName("Part 2")
+    inner class Part2 {
+        @Test
+        fun `Matches example 1`() {
+            val answer = Day06("bvwbjplbgvbhsrlpgdmjqwftvncz").solvePart2()
+            assertThat(answer).isEqualTo(23)
+        }
+        @Test
+        fun `Matches example 2`() {
+            val answer = Day06("nppdvjthqldpwncqszvftbrmjlhg").solvePart2()
+            assertThat(answer).isEqualTo(23)
+        }
+        @Test
+        fun `Matches example 3`() {
+            val answer = Day06("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg").solvePart2()
+            assertThat(answer).isEqualTo(29)
+        }
+        @Test
+        fun `Matches example 4`() {
+            val answer = Day06("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw").solvePart2()
+            assertThat(answer).isEqualTo(26)
+        }
+
+        @Test
+        fun `Actual answer`() {
+            val answer = Day06(realData).solvePart2()
+            assertThat(answer).isEqualTo(2383)
+        }
+    }
+
 }

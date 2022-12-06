@@ -3,13 +3,13 @@ package org.jglynn.aoc
 class Day06(private val input: String) {
 
     fun solvePart1() : Int =
-        input.toList()
-            .windowed(4, 1)
-            .indexOfFirst { it.toSet().size == 4 }
-            .plus(4)
+        input.indexOfFirstUnique(4)
 
-    fun solvePart2(): Int {
-        return 0
-    }
+    fun solvePart2(): Int =
+        input.indexOfFirstUnique(14)
 
+   private fun String.indexOfFirstUnique(count: Int): Int =
+       windowed(count, 1)
+           .indexOfFirst { it.toSet().size == count }
+           .plus(count)
 }
