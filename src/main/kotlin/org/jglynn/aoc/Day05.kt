@@ -4,33 +4,26 @@ typealias CrateStack = HashMap<Int, ArrayDeque<String>>
 
 class Day05(private val crateInput: String, private val instructionInput: String) {
 
+    fun solvePart1() : String =
+        solve(false)
 
-    fun solvePart1() : String {
+    fun solvePart2(): String =
+        solve(true)
 
-        val crateStack = buildCrates(crateInput)
-
-        val instructions = parseInstructions(instructionInput)
-
-        for (instruction in instructions) {
-            crateStack.move(instruction.source, instruction.destination, instruction.count)
-        }
-
-        return crateStack.map { it.value.removeLast() }.joinToString("")
-
-    }
-
-    fun solvePart2(): String {
+    private fun solve(preserveOrder: Boolean): String {
 
         val crateStack = buildCrates(crateInput)
-
         val instructions: List<Instruction> = parseInstructions(instructionInput)
 
         for (instruction in instructions) {
-            crateStack.moveMany(instruction.source, instruction.destination, instruction.count)
+            if (preserveOrder) {
+                crateStack.moveMany(instruction.source, instruction.destination, instruction.count)
+            } else {
+                crateStack.move(instruction.source, instruction.destination, instruction.count)
+            }
         }
 
-        return crateStack.map { it.value.removeLast() }.joinToString("")
-
+        return crateStack.tops()
     }
 
     private data class Instruction (val source: Int, val destination: Int, val count: Int)
@@ -38,9 +31,8 @@ class Day05(private val crateInput: String, private val instructionInput: String
     private fun parseInstructions(instructionInput: String): List<Instruction> {
         return instructionInput
             .split("\n")
-            .map { it.split(" ")
-                .mapNotNull { i -> i.toIntOrNull() }
-            }.map{ Instruction(count = it[0], source = it[1], destination = it[2])}
+            .map { row -> row.split(" ").mapNotNull { it.toIntOrNull() }}
+            .map { Instruction(count = it[0], source = it[1], destination = it[2]) }
     }
 
     private fun buildCrates(crateInput: String): CrateStack {
@@ -48,7 +40,7 @@ class Day05(private val crateInput: String, private val instructionInput: String
         val crates = crateInput
             .split("\n")
             .reversed()
-            .map{ it.padStart(1).chunked(4) { i -> i.clean() }}
+            .map { row -> row.chunked(4) { it.clean() }}
             .toList()
 
         val crateStack = CrateStack()
@@ -63,6 +55,9 @@ class Day05(private val crateInput: String, private val instructionInput: String
 
         return crateStack
     }
+
+    private fun CrateStack.tops(): String =
+        map { it.value.last() }.joinToString("")
 
     private fun CrateStack.move(source: Int, destination: Int, count: Int) {
         for (i in 1..count) move(source, destination)
