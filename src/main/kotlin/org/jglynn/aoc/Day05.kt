@@ -1,15 +1,49 @@
 package org.jglynn.aoc
 
-import org.jglynn.aoc.Utils.toURI
-import java.io.File
+typealias CrateStack = HashMap<Int, ArrayDeque<String>>
 
-
-class Day05(private val input: String) {
+class Day05(private val crateInput: String, private val instructionInput: String) {
 
 
     fun solvePart1() : String {
 
-        val (crateInput, instructionInput) = File(input.toURI()).readText().split("\n\n")
+        val crateStack = buildCrates(crateInput)
+
+        val instructions = parseInstructions(instructionInput)
+
+        for (instruction in instructions) {
+            crateStack.move(instruction.source, instruction.destination, instruction.count)
+        }
+
+        return crateStack.map { it.value.removeLast() }.joinToString("")
+
+    }
+
+    fun solvePart2(): String {
+
+        val crateStack = buildCrates(crateInput)
+
+        val instructions: List<Instruction> = parseInstructions(instructionInput)
+
+        for (instruction in instructions) {
+            crateStack.moveMany(instruction.source, instruction.destination, instruction.count)
+        }
+
+        return crateStack.map { it.value.removeLast() }.joinToString("")
+
+    }
+
+    private data class Instruction (val source: Int, val destination: Int, val count: Int)
+
+    private fun parseInstructions(instructionInput: String): List<Instruction> {
+        return instructionInput
+            .split("\n")
+            .map { it.split(" ")
+                .mapNotNull { i -> i.toIntOrNull() }
+            }.map{ Instruction(count = it[0], source = it[1], destination = it[2])}
+    }
+
+    private fun buildCrates(crateInput: String): CrateStack {
 
         val crates = crateInput
             .split("\n")
@@ -17,7 +51,7 @@ class Day05(private val input: String) {
             .map{ it.padStart(1).chunked(4) { i -> i.clean() }}
             .toList()
 
-        val crateStack = HashMap<Int, ArrayDeque<String>>()
+        val crateStack = CrateStack()
 
         crates.forEach {
             it.forEachIndexed { index, value ->
@@ -27,31 +61,27 @@ class Day05(private val input: String) {
             }
         }
 
-        val instructions = instructionInput
-            .split("\n")
-            .map { it.split(" ")
-                .mapNotNull { i -> i.toIntOrNull() }
-            }
-
-        for (instruction in instructions) {
-            crateStack.move(instruction[1], instruction[2], instruction[0])
-        }
-
-        return crateStack.map { it.value.removeLast() }.joinToString("")
-
+        return crateStack
     }
 
-    fun solvePart2(): String =
-        "UNKNOWN"
-
-    private fun HashMap<Int, ArrayDeque<String>>.move(source: Int, destination: Int, count: Int) {
+    private fun CrateStack.move(source: Int, destination: Int, count: Int) {
         for (i in 1..count) move(source, destination)
     }
 
-    private fun HashMap<Int, ArrayDeque<String>>.move(source: Int, destination: Int) =
+    private fun CrateStack.move(source: Int, destination: Int) =
         this[source]?.let { this[destination]?.add(it.removeLast()) }
 
-    private fun HashMap<Int, ArrayDeque<String>>.safePush(index: Int, value: String): ArrayDeque<String> {
+    private fun CrateStack.moveMany(source: Int, destination: Int, count: Int) =
+        this[source]?.let {this[destination]?.addAll(it.removeLast(count))}
+
+    private fun ArrayDeque<String>.removeLast(count: Int): List<String> {
+        return ( 1..count)
+            .map { removeLast() }
+            .toList()
+            .reversed()
+    }
+
+    private fun CrateStack.safePush(index: Int, value: String): ArrayDeque<String> {
         val queue = getOrDefault(index, ArrayDeque<String>())
         queue.add(value)
         return queue
